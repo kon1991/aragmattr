@@ -10,7 +10,7 @@ app.use(express.static('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', router)
-mongoose.connect('mongodb://test:test@ds157839.mlab.com:57839/bears'); 
+mongoose.connect('mongodb://test:test@ds157839.mlab.com:57839/bears');
 
 app.use(function(req, res, next) {
  res.setHeader('Access-Control-Allow-Origin', '*');

@@ -26633,7 +26633,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-			value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26671,65 +26671,69 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Container = function (_Component) {
-			_inherits(Container, _Component);
+	  _inherits(Container, _Component);
 
-			function Container(props) {
-					_classCallCheck(this, Container);
+	  function Container(props) {
+	    _classCallCheck(this, Container);
 
-					var _this = _possibleConstructorReturn(this, (Container.__proto__ || Object.getPrototypeOf(Container)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Container.__proto__ || Object.getPrototypeOf(Container)).call(this, props));
 
-					_this.state = { data: [], newaragmatiki: false };
-					_this.loadAragmatikesFromServer = _this.loadAragmatikesFromServer.bind(_this);
-					_this.handleAragmatikiSubmit = _this.handleAragmatikiSubmit.bind(_this);
-					return _this;
-			}
+	    _this.state = { data: [], newaragmatiki: false };
+	    _this.loadAragmatikesFromServer = _this.loadAragmatikesFromServer.bind(_this);
+	    _this.handleAragmatikiSubmit = _this.handleAragmatikiSubmit.bind(_this);
+	    return _this;
+	  }
 
-			_createClass(Container, [{
-					key: 'loadAragmatikesFromServer',
-					value: function loadAragmatikesFromServer() {
-							var _this2 = this;
+	  _createClass(Container, [{
+	    key: 'loadAragmatikesFromServer',
+	    value: function loadAragmatikesFromServer() {
+	      var _this2 = this;
 
-							console.log();
-							console.log(2000);
-							_axios2.default.get('http://localhost:3000/api/aragmatikes').then(function (res) {
-									_this2.setState({ data: res.data });
-							});
-					}
-			}, {
-					key: 'handleAragmatikiSubmit',
-					value: function handleAragmatikiSubmit(aragmatiki) {
-							//add POST request
-					}
-			}, {
-					key: 'componentDidMount',
-					value: function componentDidMount() {
-							this.loadAragmatikesFromServer();
-							//setInterval(this.loadAragmatikesFromServer, this.props.pollInterval);
-					}
-			}, {
-					key: 'render',
-					value: function render() {
-							var _this3 = this;
+	      console.log();
+	      console.log(2000);
+	      _axios2.default.get('http://localhost:3000/api/aragmatikes').then(function (res) {
+	        _this2.setState({ data: res.data });
+	      });
+	    }
+	  }, {
+	    key: 'handleAragmatikiSubmit',
+	    value: function handleAragmatikiSubmit(aragmatiki) {
+	      _axios2.default.post('http://localhost:3000/api/aragmatikes', aragmatiki).then(function (res) {
+	        console.log(res);
+	      }).catch(function (err) {
+	        console.error(err);
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.loadAragmatikesFromServer();
+	      setInterval(this.loadAragmatikesFromServer, 4000);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
 
-							var container = null;
-							if (!this.state.newaragmatiki) {
-									container = _react2.default.createElement(_aragmatiki_content2.default, null);
-							} else {
-									container = _react2.default.createElement(_newaragmatiki2.default, null);
-							}
-							return _react2.default.createElement(
-									'div',
-									null,
-									_react2.default.createElement(_main_bar2.default, { onNewAragmatiki: function onNewAragmatiki() {
-													return _this3.setState({ newaragmatiki: true });
-											} }),
-									_react2.default.createElement(_aragmatiki_list2.default, { data: this.state.data }),
-									container
-							);
-					}
-			}]);
+	      var container = null;
+	      if (!this.state.newaragmatiki) {
+	        container = _react2.default.createElement(_aragmatiki_content2.default, null);
+	      } else {
+	        container = _react2.default.createElement(_newaragmatiki2.default, { onAragmatikiSubmit: this.handleAragmatikiSubmit });
+	      }
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_main_bar2.default, { onNewAragmatiki: function onNewAragmatiki() {
+	            return _this3.setState({ newaragmatiki: true });
+	          } }),
+	        _react2.default.createElement(_aragmatiki_list2.default, { data: this.state.data }),
+	        container
+	      );
+	    }
+	  }]);
 
-			return Container;
+	  return Container;
 	}(_react.Component);
 
 	exports.default = Container;
@@ -26892,8 +26896,14 @@
 	    key: 'handleSubmit',
 	    value: function handleSubmit(e) {
 	      e.preventDefault();
-	      console.log(this.state.name + ' and \u201C' + this.state.place + '\u201D');
-	      //we will be tying this into the POST method in a bit
+	      var name = this.state.name.trim();
+	      var place = this.state.place.trim();
+	      console.log(name + "   " + place);
+	      if (!name || !place) {
+	        return;
+	      }
+	      this.props.onAragmatikiSubmit({ name: name, location: place });
+	      this.setState({ name: '', place: '' });
 	    }
 	  }, {
 	    key: 'render',

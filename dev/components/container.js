@@ -23,12 +23,18 @@ class Container extends Component {
 		 })
 	 }
 	 handleAragmatikiSubmit(aragmatiki) {
-	 //add POST request
-	}
+  	  axios.post('http://localhost:3000/api/aragmatikes', aragmatiki)
+      .then(res => {
+          console.log(res);
+      })
+      .catch(err => {
+          console.error(err);
+        });
+	     }
 
 	 componentDidMount() {
 	 this.loadAragmatikesFromServer();
-	 //setInterval(this.loadAragmatikesFromServer, this.props.pollInterval);
+	 setInterval(this.loadAragmatikesFromServer, 4000);
 	 }
 
 
@@ -40,7 +46,7 @@ class Container extends Component {
       container = <AragmatikiContent />
     }
     else {
-      container = <AragmatikiForm />;
+      container = <AragmatikiForm onAragmatikiSubmit={ this.handleAragmatikiSubmit }/>;
     }
     return (
       <div>

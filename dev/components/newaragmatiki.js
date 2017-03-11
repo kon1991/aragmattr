@@ -18,13 +18,19 @@ class AragmatikiForm extends Component {
 
   handlePlaceChange(e){
     this.setState({ place: e.target.value});
-  
+
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(`${this.state.name} and “${this.state.place}”`)
-    //we will be tying this into the POST method in a bit
+    let name = this.state.name.trim();
+    let place = this.state.place.trim();
+    console.log(name+"   "+place)
+    if (!name || !place) {
+     return;
+    }
+    this.props.onAragmatikiSubmit({ name: name, location: place });
+    this.setState({ name: '', place: '' });
   }
 
   render() {
