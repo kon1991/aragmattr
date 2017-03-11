@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import Logo from './logo';
 import Button from './add_button';
 
-const MainBar = () => {
+const MainBar = (props) => {
   return (
     <div className="main-bar">
       <Logo />
-      <Button />
+      <Button onNewAragmatiki={props.onNewAragmatiki} />
     </div>
   );
 }
